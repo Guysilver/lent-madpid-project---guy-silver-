@@ -18,6 +18,10 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         . . . e e e e e e e e e e . . . 
         `, mySprite, 200, 0)
 })
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Player, function (sprite, otherSprite) {
+    info.changeLifeBy(-1)
+    otherSprite.destroy(effects.fire, 500)
+})
 let Enemies: Sprite = null
 let projectile: Sprite = null
 let mySprite: Sprite = null
@@ -53,21 +57,23 @@ mySprite.setFlag(SpriteFlag.StayInScreen, true)
 game.onUpdateInterval(2000, function () {
     Enemies = sprites.create(img`
         . . . . . . . . . 3 . . . . . . 
-        . . . . . . . . 3 . . . . . . . 
-        . . . . . . . 3 . . . . . . . . 
-        . . . . . . 3 . . . . . . . . . 
-        . . . . . 3 . . . . . . . . . . 
-        . . . . 3 . . . . . . . . . . . 
-        . . . 3 . . . . . . . . . . . . 
-        . . . . 3 . . . . . . . . . . . 
-        . . . . . 3 . . . . . . . . . . 
-        . . . . . . 3 . . . . . . . . . 
-        . . . . . . . 3 . . . . . . . . 
-        . . . . . . . . 3 . . . . . . . 
+        . . . . . . . . 3 3 . . . . . . 
+        . . . . . . . 3 3 3 . . . . . . 
+        . . . . . . 3 3 3 3 . . . . . . 
+        . . . . . 3 3 3 3 3 . . . . . . 
+        . . . . 3 3 3 3 3 3 . . . . . . 
+        . . . 3 3 3 3 3 3 3 . . . . . . 
+        . . . . 3 3 3 3 3 3 . . . . . . 
+        . . . . . 3 3 3 3 3 . . . . . . 
+        . . . . . . 3 3 3 3 . . . . . . 
+        . . . . . . . 3 3 3 . . . . . . 
+        . . . . . . . . 3 3 . . . . . . 
         . . . . . . . . . 3 . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `, SpriteKind.Player)
-    mySprite.x = 0
+    Enemies.x = scene.screenWidth()
+    Enemies.vx = -20
+    Enemies.y = randint(10, scene.screenHeight() - -10)
 })
