@@ -21,6 +21,12 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Player, function (sprite, otherSprite) {
     info.changeLifeBy(-1)
     otherSprite.destroy(effects.fire, 500)
+    scene.cameraShake(4, 500)
+})
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+    sprite.destroy()
+    otherSprite.destroy()
+    info.changeScoreBy(1)
 })
 let Enemies: Sprite = null
 let projectile: Sprite = null
@@ -52,9 +58,10 @@ mySprite = sprites.create(img`
     ........................
     ........................
     `, SpriteKind.Player)
-controller.moveSprite(mySprite)
+controller.moveSprite(mySprite, 100, 100)
 mySprite.setFlag(SpriteFlag.StayInScreen, true)
-game.onUpdateInterval(2000, function () {
+info.setLife(0)
+game.onUpdateInterval(scene.screenWidth(), function () {
     Enemies = sprites.create(img`
         . . . . . . . . . 3 . . . . . . 
         . . . . . . . . 3 3 . . . . . . 
@@ -73,7 +80,7 @@ game.onUpdateInterval(2000, function () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `, SpriteKind.Player)
-    Enemies.x = scene.screenWidth()
+    Enemies.x = 0
     Enemies.vx = -20
     Enemies.y = randint(10, scene.screenHeight() - -10)
 })
