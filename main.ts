@@ -9,7 +9,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         2 3 1 d 3 3 1 1 3 3 3 1 3 4 b b 
         2 d 3 3 d 1 3 1 3 3 3 1 3 4 4 b 
         2 d 3 3 3 1 3 1 3 3 3 1 b 4 4 e 
-        2 d 3 3 3 1 1 3 3 3 3 1 b 4 4 e 
+        2 d 3 3 3 1 1 3 3 3 3 3 b 4 4 e 
         e d 3 3 3 3 d 3 3 3 d d b 4 4 e 
         e d d 3 3 3 d 3 3 3 1 3 b 4 b e 
         e 3 d 3 3 1 d d 3 d 1 b b e e . 
@@ -18,11 +18,20 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         . . . e e e e e e e e e e . . . 
         `, mySprite, 200, 0)
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Player, function (sprite, otherSprite) {
+statusbars.onZero(StatusBarKind.EnemyHealth, function (status) {
+    status.spriteAttachedTo().destroy()
+})
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+    sprite.destroy()
+    statusbars.getStatusBarAttachedTo(StatusBarKind.EnemyHealth, otherSprite).value += -15
+    info.changeScoreBy(1)
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
     info.changeLifeBy(-1)
     otherSprite.destroy(effects.spray, 500)
     scene.cameraShake(4, 500)
 })
+let statusbar: StatusBarSprite = null
 let Enemies: Sprite = null
 let projectile: Sprite = null
 let mySprite: Sprite = null
@@ -74,8 +83,10 @@ game.onUpdateInterval(2000, function () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Player)
+        `, SpriteKind.Enemy)
     Enemies.x = scene.screenWidth()
-    Enemies.vx = -20
+    Enemies.vx = -40
     Enemies.y = randint(10, scene.screenHeight() - -10)
+    statusbar = statusbars.create(20, 4, StatusBarKind.EnemyHealth)
+    statusbar.attachToSprite(Enemies)
 })
